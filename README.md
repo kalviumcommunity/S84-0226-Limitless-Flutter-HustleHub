@@ -1,273 +1,163 @@
-Sprint #2 Project Plan – Freelance Workflow Manager
-1. Problem Statement & Solution Overview
+# HustleHub - Freelance Workflow Manager
 
-Problem Statement
-Freelancers often juggle multiple clients, tasks, deadlines, and payments across different tools (chat apps, notes, spreadsheets). This fragmentation causes missed follow-ups, unclear priorities, delayed payments, and poor visibility into work progress.
+*A Smart Workflow & Client Management App for Freelancers*
 
-Solution Overview
-We propose a mobile-first Freelance Workflow Manager built with Flutter and Firebase that centralizes tasks, client details, deadlines, and payment tracking into a single, real-time app. The mobile experience enables freelancers to quickly update task status, check upcoming deadlines, and monitor payments on the go, ensuring better organization and accountability.
+------------------------------------------------------------------------
 
-Target Users
+## 📌 Problem Statement
 
-Independent freelancers (designers, developers, writers, marketers)
+Freelancers often juggle tasks, client deadlines, and payments without a
+unified system, leading to confusion and missed follow-ups.  
+This project provides a single mobile platform where freelancers can
+manage clients, projects, tasks, deadlines, and payment status — all in
+one place.
 
-Early-stage consultants managing multiple clients
+------------------------------------------------------------------------
 
-Why This Matters Now
-Remote work and freelancing are growing rapidly. Freelancers need lightweight, reliable mobile tools that replace scattered systems with one unified workflow hub.
+## 🚀 Solution Overview
 
-Why Mobile (Flutter) + Firebase
+HustleHub is a Flutter + Firebase powered mobile application that
+helps freelancers organize their entire workflow from one dashboard.
 
-Mobile-first usage suits freelancers’ on-the-go lifestyle
+The app allows users to:
 
-Flutter ensures fast, consistent UI across Android & iOS
+-   Manage clients and projects
+-   Track tasks and deadlines
+-   Monitor payments
+-   Receive real-time updates
+-   Stay productive with a clean, responsive UI
 
-Firebase provides real-time sync, authentication, and scalable backend with minimal setup
+------------------------------------------------------------------------
 
-2. Scope & Boundaries
-In Scope (Sprint #2)
+## 🎯 MVP Features
 
-Firebase Authentication (Email/Password)
+### 🔐 Authentication
 
-Client management (basic profile: name, contact, notes)
+-   Email & Password Signup/Login
+-   Persistent user sessions
 
-Task management (CRUD tasks with deadline & status)
+### 👤 Client Management
 
-Payment tracking (pending / received status)
+-   Add / Edit / Delete clients
+-   Store contact information
+-   View client-wise projects
 
-Dashboard with real-time data from Firestore
+### 📂 Project & Task Tracking
 
-Core Flutter UI screens
+-   Create projects per client
+-   Add tasks with deadlines
+-   Update task status (Pending / Completed)
+-   Real-time syncing using Firestore
 
-APK build for demo
+### 💰 Payment Tracking
 
-Out of Scope (Not in Sprint #2)
+-   Track paid and pending payments
+-   View payment history
 
-Push notifications & reminders
+------------------------------------------------------------------------
 
-Advanced analytics & reports
+## 🧠 Tech Stack
 
-In-app chat with clients
+### Frontend
 
-Payment gateway integration
+-   Flutter
+-   Dart
 
-Desktop/Web optimization
+### Backend
 
-3. Roles & Responsibilities (Detailed)
-Team Structure (3 Members)
-Role	Team Member	Detailed Responsibilities
-Frontend (Flutter)	App UI architecture, Flutter widgets, navigation, responsive layouts, reusable components, UI polish
-Backend (Firebase) 	Firebase project setup, Authentication, Firestore schema design, security rules, backend logic
-Integration, Testing & Deployment 	UI–Firebase integration, CRUD logic, state management, validation, testing, APK builds, CI/CD
-Contribution Breakdown
+-   Firebase Authentication
+-   Cloud Firestore
+-   Firebase Storage
+-   Firebase Cloud Messaging
 
-Frontend (Flutter )
+### State Management
 
-Design wireframes (Login, Dashboard, Clients, Tasks, Payments, Profile)
+-   Provider / Riverpod
 
-Implement reusable UI components (cards, buttons, forms)
+------------------------------------------------------------------------
 
-Set up navigation (bottom nav / drawer)
+## 🏗 High Level Architecture (HLD)
 
-Ensure responsive layouts and smooth animations
+Flutter UI  
+↓  
+State Management (Provider / Riverpod)  
+↓  
+Firebase Services (Auth, Firestore, Storage)
 
-Backend (Firebase )
+------------------------------------------------------------------------
 
-Create Firebase project & environments
+## 📁 Firestore Database Structure
 
-Configure Firebase Auth (Sign In, Sign Up, Logout)
+users/  
+userId/  
+name  
+email
 
-Design Firestore collections:
+clients/  
+clientId/  
+userId  
+name  
+contact
 
-users
+projects/  
+projectId/  
+clientId  
+title  
+deadline
 
-clients
+tasks/  
+taskId/  
+projectId  
+title  
+status
 
-tasks
+payments/  
+paymentId/  
+clientId  
+amount  
+status
 
-payments
+------------------------------------------------------------------------
 
-Implement Firestore security rules
+## 🛠 Setup Instructions
 
-Integration, Testing & Deployment
+### Clone Repository
 
-Connect Flutter screens to Firestore
+git clone https://github.com/kalviumcommunity/S84-0226-Limitless-Flutter-HustleHub.git 
+cd HustleHub
 
-Implement CRUD operations for clients, tasks, payments
+### Install Dependencies
 
-Manage app state (Provider/Riverpod)
+flutter pub get
 
-Handle loading, error, and empty states
+### Configure Firebase
 
-Define and execute test cases
+1.  Create Firebase Project  
+2.  Add Android App  
+3.  Download google-services.json  
+4.  Place inside android/app/  
+5.  Run flutterfire configure
 
-Generate debug & release APKs
+### Run App
 
-Set up GitHub Actions CI/CD
+flutter run
 
-Prepare demo checklist & documentation
+------------------------------------------------------------------------
 
----|---|---| | Frontend (Flutter) Lead |  App UI architecture, Flutter widgets, navigation, responsive layouts, state management, UI polish | | Backend (Firebase) Lead | Firebase project setup, Auth integration, Firestore schema design, security rules, backend logic | | Integration & Logic Engineer | Connecting Flutter UI with Firebase, CRUD logic, form validation, error handling, app state flow | | Testing & Deployment Lead | Testing strategy, widget & integration tests, APK builds, CI/CD setup, final deployment prep |
+## 📦 Build Release APK
 
-Contribution Breakdown
+flutter build apk –release
 
-Frontend (Flutter )
+------------------------------------------------------------------------
 
-Design wireframes (Login, Dashboard, Clients, Tasks, Payments, Profile)
+## 👨‍💻 Team
 
-Implement reusable UI components (cards, buttons, forms)
+-   Flutter Developer  
+-   Firebase Backend  
+-   UI/UX Designer
 
-Set up navigation (bottom nav / drawer)
+------------------------------------------------------------------------
 
-Ensure responsive layouts and smooth animations
+## 📄 License
 
-Backend (Firebase )
-
-Create Firebase project & environments
-
-Configure Firebase Auth (Sign In, Sign Up, Logout)
-
-Design Firestore collections:
-
-users
-
-clients
-
-tasks
-
-payments
-
-Implement Firestore security rules
-
-Integration & App Logic 
-
-Connect Flutter screens to Firestore
-
-Implement CRUD operations for clients, tasks, payments
-
-Manage app state (Provider/Riverpod)
-
-Handle loading, error, and empty states
-
-Testing & Deployment 
-
-Define test cases for auth & CRUD flows
-
-Run widget & integration tests
-
-Generate debug & release APKs
-
-Set up GitHub Actions CI/CD
-
-Prepare demo checklist & documentation
-
-4. Sprint Timeline (4 Weeks)
-Week-by-Week Plan
-Week	Focus Area	Milestones / Deliverables	Owners
-Week 1	Setup & Design	Finalize app idea, wireframes, Firebase setup, Flutter project structure	All (Lead: Aditi & Rahul)
-Week 2	Core Development	Auth flows, Firestore schema, Dashboard UI, basic CRUD screens	 
-Week 3	Integration & Testing	UI–Firebase integration, CRUD testing, validation, error handling	
-Integration & Testing	UI–Firebase integration, CRUD testing, validation, error handling	
-Week 4	MVP & Deployment	UI polish, feature freeze, APK build, demo & documentation	Meera (Lead), All
-5. Deployment & Testing Plan
-Testing Strategy
-
-Widget tests for core UI components
-
-Integration tests for Auth & Firestore CRUD
-
-Manual UAT for:
-
-Login/Signup
-
-Task creation & updates
-
-Payment status changes
-
-Deployment
-
-GitHub Actions for CI/CD
-
-Generate APK for Android demo
-
-Share APK via Google Drive for review
-
-6. MVP (Minimum Viable Product)
-MVP Features (Must-Have)
-
-User authentication (Sign Up, Login, Logout)
-
-Add & view clients
-
-Create, update, delete tasks with status & deadlines
-
-Track payment status (pending/received)
-
-Dashboard summarizing tasks & payments
-
-Real-time Firestore sync
-
-Working APK
-
-Core App Screens
-
-Splash Screen
-
-Login / Sign Up
-
-Dashboard
-
-Clients List & Detail
-
-Tasks List & Detail
-
-Payments Overview
-
-Profile & Settings
-
-7. Functional Requirements
-
-Users can securely register and log in
-
-Users can create, edit, and delete clients
-
-Users can manage tasks linked to clients
-
-Users can track payment status per task/client
-
-App reflects real-time Firestore updates
-
-8. Non-Functional Requirements
-
-Performance: Screen transitions < 200 ms
-
-Scalability: Minimum 100 concurrent users
-
-Security: Firebase Auth + Firestore rules
-
-Reliability: No crashes during CRUD operations
-
-Responsiveness: Works on Android phones of varying sizes
-
-9. Success Metrics
-
-All MVP features implemented and functional
-
-Firebase Auth + Firestore fully integrated
-
-APK builds successfully and runs without errors
-
-All planned PRs merged on time
-
-Positive mentor/demo feedback
-
-10. Risks & Mitigation
-Risk	Impact	Mitigation
-Firebase misconfiguration	Backend delays	Use mock data to unblock frontend
-Integration bugs	Feature delays	Early integration in Week 3
-UI inconsistency	Poor demo quality	UI review & polish in Week 4
-
-Final Note
-This project plan serves as the execution blueprint for Sprint #2. The goal is not feature overload, but a stable, well-integrated Flutter + Firebase MVP that clearly demonstrates real-world value for freelancers.
-
-“We’re not just managing tasks—we’re giving freelancers clarity, control, and confidence in their daily workflow.”
+Educational project under Kalvium Sprint \#2.
