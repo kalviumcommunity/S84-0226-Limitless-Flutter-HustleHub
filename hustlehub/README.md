@@ -76,6 +76,32 @@ The app allows users to:
 
 ------------------------------------------------------------------------
 
+### 📁 Project Folder Structure
+
+This project follows Flutter’s standard folder organization for clean architecture and scalability.
+
+- Detailed explanation of each folder is documented in:
+
+👉 PROJECT_STRUCTURE.md
+
+- Main folders used:
+
+lib/ – Application logic and UI
+
+android/ – Android native configuration
+
+ios/ – iOS native configuration
+
+assets/ – Images and static files
+
+test/ – Automated tests
+
+pubspec.yaml – Dependency & asset management
+
+This structure allows modular development and smooth collaboration across team members.
+
+------------------------------------------------------------------------
+
 ## 🏗 High Level Architecture (HLD)
 
 Flutter UI  
