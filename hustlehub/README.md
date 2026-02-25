@@ -201,6 +201,8 @@ flutter build apk –release
 
 Educational project under Kalvium Sprint \#2.
 
+------------------------------------------------------------------------
+
 ## 🔄 Stateless vs Stateful Widgets Demo
 
 This demo demonstrates the difference between Stateless and Stateful widgets in Flutter.
@@ -255,3 +257,53 @@ class _DemoBodyState extends State<DemoBody> {
 - Counter updates on button click (StatefulWidget)
 
 This separation allows Flutter apps to remain efficient and maintainable.
+
+------------------------------------------------------------------------
+
+## ⚡ Hot Reload, Debug Console & Flutter DevTools
+
+- This section demonstrates how Flutter’s development tools improve productivity and debugging.
+
+# Hot Reload
+
+Hot Reload allows instant UI updates without restarting the app.
+
+Steps followed:
+
+- Modified widget code
+
+- Pressed r in terminal
+
+- Changes reflected immediately while preserving state
+
+# Debug Console
+
+Used `debugPrint()` to log runtime data.
+
+```
+debugPrint("Button pressed! Counter value: $counter");
+```
+
+This helped track button presses and state updates in real time.
+
+## Flutter DevTools
+
+Flutter DevTools was launched to inspect:
+
+- Widget tree using Widget Inspector
+
+- UI hierarchy
+
+- App performance
+
+These tools together enable faster iteration, easier debugging, and better optimization.
+
+## Reflection
+
+Hot Reload speeds up UI experimentation.
+Debug Console provides visibility into app behavior.
+Flutter DevTools helps analyze widgets and performance.
+
+Together, they form an efficient Flutter development workflow.
+
+------------------------------------------------------------------------

@@ -41,10 +41,11 @@ class _DemoBodyState extends State<DemoBody> {
   int counter = 0;
 
   void increment() {
-    setState(() {
-      counter++;
-    });
-  }
+  setState(() {
+    counter++;
+    debugPrint("Button pressed! Counter value: $counter");
+  });
+}
 
   @override
   Widget build(BuildContext context) {
