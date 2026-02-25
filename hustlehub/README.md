@@ -102,6 +102,19 @@ This structure allows modular development and smooth collaboration across team m
 
 ------------------------------------------------------------------------
 
+## MaterialApp
+ ┗ Scaffold
+    ┣ AppBar
+    ┗ Body
+       ┗ Center
+          ┗ Column
+             ┣ Text (Counter)
+             ┣ ElevatedButton (Increment)
+             ┣ Text (Conditional Message)
+             ┗ ElevatedButton (Toggle)
+
+------------------------------------------------------------------------
+
 ## 🏗 High Level Architecture (HLD)
 
 Flutter UI  
