@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'screens/stateless_stateful_demo.dart';
 
 void main() {
   runApp(const HustleHubApp());
@@ -12,7 +13,7 @@ class HustleHubApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'HustleHub',
-      home: const WidgetTreeDemo(),
+      home: const StatelessStatefulDemo(),
     );
   }
 }

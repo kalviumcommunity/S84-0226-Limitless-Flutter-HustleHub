@@ -200,3 +200,58 @@ flutter build apk –release
 ## 📄 License
 
 Educational project under Kalvium Sprint \#2.
+
+## 🔄 Stateless vs Stateful Widgets Demo
+
+This demo demonstrates the difference between Stateless and Stateful widgets in Flutter.
+
+# Stateless Widget
+
+Used for static UI elements that do not change during runtime.
+
+- Example from our project:
+
+```
+class HeaderWidget extends StatelessWidget {
+  const HeaderWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Text(
+      "Interactive Counter App",
+      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    );
+  }
+}
+```
+
+# Stateful Widget
+
+- Used for dynamic UI that updates based on user interaction.
+
+```
+class DemoBody extends StatefulWidget {
+  const DemoBody({super.key});
+
+  @override
+  State<DemoBody> createState() => _DemoBodyState();
+}
+
+class _DemoBodyState extends State<DemoBody> {
+  int counter = 0;
+
+  void increment() {
+    setState(() {
+      counter++;
+    });
+  }
+}
+```
+
+## Behavior
+
+- Header text remains static (StatelessWidget)
+
+- Counter updates on button click (StatefulWidget)
+
+This separation allows Flutter apps to remain efficient and maintainable.
