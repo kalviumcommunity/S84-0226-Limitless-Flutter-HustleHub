@@ -307,3 +307,46 @@ Flutter DevTools helps analyze widgets and performance.
 Together, they form an efficient Flutter development workflow.
 
 ------------------------------------------------------------------------
+
+## 🧭 Multi-Screen Navigation Using Navigator & Routes
+
+This demo implements multi-screen navigation using Flutter’s Navigator and named routes.
+
+# Screens Implemented
+
+- HomeScreen
+
+- SecondScreen
+
+# Route Configuration (main.dart)
+
+```
+MaterialApp(
+  initialRoute: '/',
+  routes: {
+    '/': (context) => const HomeScreen(),
+    '/second': (context) => const SecondScreen(),
+  },
+);
+```
+# avigation Logic
+
+From Home Screen:
+
+```
+Navigator.pushNamed(context, '/second');
+```
+
+From Second Screen:
+
+```
+Navigator.pop(context);
+```
+
+# Reflection
+
+Flutter uses a stack-based navigation system.
+`Navigator.pushNamed()` adds a screen to the stack.
+`Navigator.pop()` removes the top screen and returns to the previous one.
+
+Named routes help keep navigation organized and scalable in larger applications.
