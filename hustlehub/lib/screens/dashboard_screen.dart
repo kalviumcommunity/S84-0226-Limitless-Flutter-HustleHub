@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:hustlehub/providers/auth_provider.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
-  Future<void> _logout(BuildContext context) async {
-    await FirebaseAuth.instance.signOut();
-    // Navigator pop/push not needed because StreamBuilder in main.dart handles it
-  }
-
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
+    // Listen to AuthProvider to get real-time user data
+    final authProvider = Provider.of<AuthProvider>(context);
+    final user = authProvider.currentUser;
     
+    // Determine greeting name
+    String greetingName = 'Freelancer';
+    if (authProvider.isLoading) {
+      greetingName = 'Loading...';
+    } else if (user != null && user.name.isNotEmpty) {
+      greetingName = user.name.split(' ').first; // Use first name
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -20,7 +26,7 @@ class DashboardScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.logout),
             tooltip: 'Logout',
-            onPressed: () => _logout(context),
+            onPressed: () => authProvider.logout(),
           ),
         ],
       ),
@@ -30,7 +36,7 @@ class DashboardScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Hello, ${user?.email?.split('@').first ?? 'Freelancer'}! \u{1F44B}',
+              'Hello, $greetingName! \u{1F44B}',
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 24),
