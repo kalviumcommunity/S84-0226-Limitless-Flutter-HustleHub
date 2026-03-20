@@ -74,4 +74,46 @@ class ClientsProvider with ChangeNotifier {
       rethrow;
     }
   }
+
+  Future<void> updateClient(String clientId, String name, String email, String phone) async {
+    try {
+      await FirebaseFirestore.instance.collection('clients').doc(clientId).update({
+        'name': name,
+        'email': email,
+        'phone': phone,
+      });
+
+      // Update locally
+      final index = _clients.indexWhere((c) => c.id == clientId);
+      if (index != -1) {
+        final existingClient = _clients[index];
+        _clients[index] = ClientModel(
+          id: existingClient.id,
+          userId: existingClient.userId,
+          name: name,
+          email: email,
+          phone: phone,
+          createdAt: existingClient.createdAt,
+        );
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint("Error updating client: $e");
+      rethrow;
+    }
+  }
+
+  Future<void> deleteClient(String clientId) async {
+    try {
+      await FirebaseFirestore.instance.collection('clients').doc(clientId).delete();
+      
+      // Update locally
+      _clients.removeWhere((c) => c.id == clientId);
+      notifyListeners();
+    } catch (e) {
+      debugPrint("Error deleting client: $e");
+      rethrow;
+    }
+  }
 }
+

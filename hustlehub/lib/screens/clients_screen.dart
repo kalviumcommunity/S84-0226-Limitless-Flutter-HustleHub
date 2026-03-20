@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:hustlehub/providers/clients_provider.dart';
+import 'package:hustlehub/models/client_model.dart';
 
 class ClientsScreen extends StatefulWidget {
   const ClientsScreen({super.key});
@@ -19,16 +20,17 @@ class _ClientsScreenState extends State<ClientsScreen> {
     });
   }
 
-  void _showAddClientDialog(BuildContext context) {
-    final nameController = TextEditingController();
-    final emailController = TextEditingController();
-    final phoneController = TextEditingController();
+  void _showAddClientDialog(BuildContext context, {ClientModel? existingClient}) {
+    final isEditing = existingClient != null;
+    final nameController = TextEditingController(text: existingClient?.name ?? '');
+    final emailController = TextEditingController(text: existingClient?.email ?? '');
+    final phoneController = TextEditingController(text: existingClient?.phone ?? '');
 
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Add New Client'),
+          title: Text(isEditing ? 'Edit Client' : 'Add New Client'),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -62,15 +64,25 @@ class _ClientsScreenState extends State<ClientsScreen> {
                 if (nameController.text.trim().isEmpty) return;
                 
                 try {
-                  await Provider.of<ClientsProvider>(context, listen: false).addClient(
-                    nameController.text.trim(),
-                    emailController.text.trim(),
-                    phoneController.text.trim(),
-                  );
+                  if (isEditing) {
+                    await Provider.of<ClientsProvider>(context, listen: false).updateClient(
+                      existingClient.id,
+                      nameController.text.trim(),
+                      emailController.text.trim(),
+                      phoneController.text.trim(),
+                    );
+                  } else {
+                    await Provider.of<ClientsProvider>(context, listen: false).addClient(
+                      nameController.text.trim(),
+                      emailController.text.trim(),
+                      phoneController.text.trim(),
+                    );
+                  }
+                  
                   if (context.mounted) {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Client added successfully')),
+                      SnackBar(content: Text(isEditing ? 'Client updated successfully' : 'Client added successfully')),
                     );
                   }
                 } catch (e) {
@@ -81,11 +93,46 @@ class _ClientsScreenState extends State<ClientsScreen> {
                   }
                 }
               },
-              child: const Text('Save'),
+              child: Text(isEditing ? 'Update' : 'Save'),
             ),
           ],
         );
       },
+    );
+  }
+
+  void _confirmDelete(BuildContext context, String clientId, String clientName) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Client'),
+        content: Text('Are you sure you want to delete $clientName?\nThis action cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              try {
+                await Provider.of<ClientsProvider>(context, listen: false).deleteClient(clientId);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Client deleted successfully'), backgroundColor: Colors.redAccent),
+                  );
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+                }
+              }
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -120,11 +167,18 @@ class _ClientsScreenState extends State<ClientsScreen> {
                         subtitle: Text(
                           client.email.isNotEmpty ? client.email : (client.phone.isNotEmpty ? client.phone : 'No contact info'),
                         ),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.phone, color: Colors.green),
-                          onPressed: client.phone.isNotEmpty ? () {
-                            // Link to phone dialer would go here in future
-                          } : null,
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit, color: Colors.blue),
+                              onPressed: () => _showAddClientDialog(context, existingClient: client),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () => _confirmDelete(context, client.id, client.name),
+                            ),
+                          ],
                         ),
                       ),
                     );
