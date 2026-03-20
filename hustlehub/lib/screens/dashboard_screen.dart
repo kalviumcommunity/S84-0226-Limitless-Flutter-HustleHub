@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
+  Future<void> _logout(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    // Navigator pop/push not needed because StreamBuilder in main.dart handles it
+  }
+
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard'),
+        title: const Text('Dashboard', style: TextStyle(fontWeight: FontWeight.bold)),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, '/login');
-            },
+            tooltip: 'Logout',
+            onPressed: () => _logout(context),
           ),
         ],
       ),
@@ -22,9 +29,9 @@ class DashboardScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Hello, Freelancer! \u{1F44B}',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            Text(
+              'Hello, ${user?.email?.split('@').first ?? 'Freelancer'}! \u{1F44B}',
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 24),
             Row(
@@ -72,7 +79,7 @@ class DashboardScreen extends StatelessWidget {
           const SizedBox(height: 16),
           Text(value, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color)),
           const SizedBox(height: 4),
-          Text(title, style: TextStyle(fontSize: 14, color: Colors.black87)),
+          Text(title, style: const TextStyle(fontSize: 14, color: Colors.black87)),
         ],
       ),
     );
@@ -82,6 +89,7 @@ class DashboardScreen extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 2,
       child: ListTile(
         leading: CircleAvatar(
           backgroundColor: isUrgent ? Colors.red.shade100 : Colors.green.shade100,
