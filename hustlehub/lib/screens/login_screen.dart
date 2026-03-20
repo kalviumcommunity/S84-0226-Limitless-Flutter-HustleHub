@@ -1,37 +1,33 @@
 import 'package:flutter/material.dart';
 
-class SignupScreen extends StatelessWidget {
-  const SignupScreen({super.key});
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sign Up'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 48.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              const SizedBox(height: 40),
+              const Icon(Icons.rocket_launch, size: 80, color: Color(0xFF6200EA)),
+              const SizedBox(height: 24),
               const Text(
-                'Create an Account',
+                'Welcome to HustleHub',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.black87),
               ),
-              const SizedBox(height: 32),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Full Name',
-                  prefixIcon: const Icon(Icons.person),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                ),
+              const SizedBox(height: 8),
+              const Text(
+                'Manage your freelance workflow effortlessly.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16, color: Colors.black54),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 48),
               TextField(
                 decoration: InputDecoration(
                   labelText: 'Email',
@@ -48,7 +44,7 @@ class SignupScreen extends StatelessWidget {
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pushReplacementNamed(context, '/home');
@@ -59,14 +55,14 @@ class SignupScreen extends StatelessWidget {
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: const Text('Sign Up', style: TextStyle(fontSize: 18)),
+                child: const Text('Login', style: TextStyle(fontSize: 18)),
               ),
               const SizedBox(height: 16),
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.pushNamed(context, '/signup');
                 },
-                child: const Text('Already have an account? Login'),
+                child: const Text('Don\'t have an account? Sign Up'),
               ),
             ],
           ),
