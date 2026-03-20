@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
+import 'package:provider/provider.dart';
 import 'package:hustlehub/theme/app_theme.dart';
+import 'package:hustlehub/providers/auth_provider.dart';
 import 'package:hustlehub/screens/login_screen.dart';
 import 'package:hustlehub/screens/signup_screen.dart';
 import 'package:hustlehub/screens/home_screen.dart';
@@ -13,7 +15,14 @@ void main() async {
   } catch (e) {
     debugPrint("Firebase init error (might need firebase_options.dart): $e");
   }
-  runApp(const HustleHubApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+      ],
+      child: const HustleHubApp(),
+    ),
+  );
 }
 
 class HustleHubApp extends StatelessWidget {
