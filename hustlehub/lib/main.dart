@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hustlehub/theme/app_theme.dart';
 import 'package:hustlehub/screens/login_screen.dart';
 import 'package:hustlehub/screens/signup_screen.dart';
 import 'package:hustlehub/screens/home_screen.dart';
@@ -23,14 +24,7 @@ class HustleHubApp extends StatelessWidget {
     return MaterialApp(
       title: 'HustleHub',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF6200EA),
-          brightness: Brightness.light,
-        ),
-        useMaterial3: true,
-        fontFamily: 'Roboto',
-      ),
+      theme: AppTheme.lightTheme,
       home: const AuthWrapper(),
       routes: {
         '/login': (context) => const LoginScreen(),
