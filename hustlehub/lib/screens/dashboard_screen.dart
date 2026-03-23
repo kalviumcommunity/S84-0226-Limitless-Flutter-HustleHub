@@ -5,6 +5,7 @@ import 'package:hustlehub/providers/auth_provider.dart';
 import 'package:hustlehub/providers/clients_provider.dart';
 import 'package:hustlehub/providers/projects_provider.dart';
 import 'package:hustlehub/providers/payments_provider.dart';
+import 'package:hustlehub/screens/profile_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -70,9 +71,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
         title: const Text('Dashboard', style: TextStyle(fontWeight: FontWeight.bold)),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: 'Logout',
-            onPressed: () => authProvider.logout(),
+            icon: const Icon(Icons.account_circle),
+            tooltip: 'Profile',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+              );
+            },
           ),
         ],
       ),
