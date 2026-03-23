@@ -624,4 +624,68 @@ For issues, questions, or feedback:
 
 ------------------------------------------------------------------------
 
+## 👥 Client Management Feature Details
+
+### Overview
+The Client Management module is the foundation of HustleHub, allowing freelancers to organize and track all their client information in one centralized location. It integrates seamlessly with the project management system to provide client-wise analytics and project filtering.
+
+### Key Implementation Details
+
+#### Client Creation
+- **Input Validation**: Email format validation, required fields enforcement
+- **Firestore Storage**: Clients stored in `clients/{clientId}/` with user ID association
+- **Unique Identification**: Each client gets a unique document ID assigned by Firestore
+- **Data Persistence**: All client changes sync instantly to Firestore
+
+#### Client Data Fields
+```
+Client {
+  - id (clientId): Unique identifier
+  - userId: Foreign key to owner (freelancer)
+  - name: Client company/individual name
+  - email: Primary contact email
+  - phone: Contact phone number
+  - company: Company name/organization
+  - createdAt: Timestamp of creation
+}
+```
+
+#### Advanced Features
+- **Client Filtering**: Search and filter clients by name or company
+- **Project Association**: View all projects linked to a specific client
+- **Client-wise Analytics**: Total projects, total revenue, pending payments per client
+- **Edit Capability**: Update client information with real-time sync
+- **Soft Delete**: Archive inactive clients without losing historical data
+- **Contact History**: Track all communication attempts and updates
+
+### Database Operations
+
+```dart
+// Example operations in ClientsProvider
+Future<void> addClient(String name, String email, String phone, String company)
+Future<void> updateClient(String clientId, Map<String, dynamic> updates)
+Future<void> deleteClient(String clientId)
+List<Client> getClientProjects(String clientId)
+List<Client> filterClients(String searchQuery)
+```
+
+### UI Components
+- **Client List Screen**: Displays all clients with card view
+- **Add Client Dialog**: Form for adding new clients
+- **Client Details View**: Shows client info and linked projects
+- **Client Edit Screen**: Modify existing client information
+
+### Security Considerations
+- Clients are user-specific (filtered by userId in Firestore)
+- Only the client owner (freelancer) can view/edit/delete
+- Client data is accessible only through authenticated sessions
+
+### Performance Optimization
+- Lazy loading of client projects
+- Caching of frequently accessed clients
+- Batch operations for bulk client updates
+- Indexed queries on userId and name fields
+
+------------------------------------------------------------------------
+
 *Happy Freelancing with HustleHub! 🚀*
