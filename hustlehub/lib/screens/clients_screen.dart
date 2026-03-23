@@ -11,6 +11,8 @@ class ClientsScreen extends StatefulWidget {
 }
 
 class _ClientsScreenState extends State<ClientsScreen> {
+  String _searchQuery = '';
+
   @override
   void initState() {
     super.initState();
@@ -139,20 +141,49 @@ class _ClientsScreenState extends State<ClientsScreen> {
   @override
   Widget build(BuildContext context) {
     final clientsProvider = Provider.of<ClientsProvider>(context);
+    
+    // Filter clients based on search query
+    final filteredClients = clientsProvider.clients.where((client) {
+      return client.name.toLowerCase().contains(_searchQuery.toLowerCase()) || 
+             client.email.toLowerCase().contains(_searchQuery.toLowerCase());
+    }).toList();
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Clients', style: TextStyle(fontWeight: FontWeight.bold)),
       ),
-      body: clientsProvider.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : clientsProvider.clients.isEmpty
-              ? _buildEmptyState()
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16.0),
-                  itemCount: clientsProvider.clients.length,
-                  itemBuilder: (context, index) {
-                    final client = clientsProvider.clients[index];
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Search clients by name or email...',
+                prefixIcon: const Icon(Icons.search),
+                filled: true,
+                fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                });
+              },
+            ),
+          ),
+          Expanded(
+            child: clientsProvider.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : filteredClients.isEmpty
+                    ? _buildEmptyState()
+                    : ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        itemCount: filteredClients.length,
+                        itemBuilder: (context, index) {
+                          final client = filteredClients[index];
                     return Card(
                       margin: const EdgeInsets.only(bottom: 12),
                       child: ListTile(
@@ -184,6 +215,9 @@ class _ClientsScreenState extends State<ClientsScreen> {
                     );
                   },
                 ),
+          ), // End of Expanded
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddClientDialog(context),
         tooltip: 'Add Client',
