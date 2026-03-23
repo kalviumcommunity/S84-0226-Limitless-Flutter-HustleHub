@@ -180,11 +180,15 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                     ? const Center(child: CircularProgressIndicator())
                     : filteredPayments.isEmpty
                         ? const Center(child: Text("No payments found."))
-                        : ListView.builder(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                            itemCount: filteredPayments.length,
-                            itemBuilder: (context, index) {
-                              final payment = filteredPayments[index];
+                        : RefreshIndicator(
+                            onRefresh: () async {
+                              await Provider.of<PaymentsProvider>(context, listen: false).fetchPayments();
+                            },
+                            child: ListView.builder(
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              itemCount: filteredPayments.length,
+                              itemBuilder: (context, index) {
+                                final payment = filteredPayments[index];
               
               String clientName = "Unknown Client";
               try {
@@ -285,6 +289,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                 ),
               );
             },
+          ),
           ),
           ), // End of Expanded
           ],
