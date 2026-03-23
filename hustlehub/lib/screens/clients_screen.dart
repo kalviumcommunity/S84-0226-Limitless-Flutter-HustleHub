@@ -179,7 +179,11 @@ class _ClientsScreenState extends State<ClientsScreen> {
                 ? const Center(child: CircularProgressIndicator())
                 : filteredClients.isEmpty
                     ? _buildEmptyState()
-                    : ListView.builder(
+                    : RefreshIndicator(
+                        onRefresh: () async {
+                          await clientsProvider.fetchClients();
+                        },
+                        child: ListView.builder(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         itemCount: filteredClients.length,
                         itemBuilder: (context, index) {
@@ -214,6 +218,7 @@ class _ClientsScreenState extends State<ClientsScreen> {
                       ),
                     );
                   },
+                ),
                 ),
           ), // End of Expanded
         ],

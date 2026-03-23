@@ -240,7 +240,12 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                     ? const Center(child: CircularProgressIndicator())
                     : filteredProjects.isEmpty
                         ? const Center(child: Text("No projects found."))
-                        : ListView.builder(
+                        : RefreshIndicator(
+                            onRefresh: () async {
+                              await projectsProvider.fetchProjects();
+                              await clientsProvider.fetchClients();
+                            },
+                            child: ListView.builder(
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
                             itemCount: filteredProjects.length,
                             itemBuilder: (context, index) {
@@ -350,6 +355,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                 ),
               );
             },
+          ),
           ),
           ), // End of Expanded
             ],
