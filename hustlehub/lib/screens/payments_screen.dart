@@ -12,6 +12,8 @@ class PaymentsScreen extends StatefulWidget {
 }
 
 class _PaymentsScreenState extends State<PaymentsScreen> {
+  String _searchQuery = '';
+
   @override
   void initState() {
     super.initState();
@@ -146,19 +148,43 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       ),
       body: Consumer2<PaymentsProvider, ClientsProvider>(
         builder: (context, paymentsProvider, clientsProvider, child) {
-          if (paymentsProvider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+          
+          final filteredPayments = paymentsProvider.payments.where((p) {
+              return p.title.toLowerCase().contains(_searchQuery.toLowerCase());
+          }).toList();
 
-          if (paymentsProvider.payments.isEmpty) {
-            return const Center(child: Text("No payments found. Add an invoice above."));
-          }
-
-          return ListView.builder(
-            padding: const EdgeInsets.all(16.0),
-            itemCount: paymentsProvider.payments.length,
-            itemBuilder: (context, index) {
-              final payment = paymentsProvider.payments[index];
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search payments by title...',
+                    prefixIcon: const Icon(Icons.search),
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value;
+                    });
+                  },
+                ),
+              ),
+              Expanded(
+                child: paymentsProvider.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : filteredPayments.isEmpty
+                        ? const Center(child: Text("No payments found."))
+                        : ListView.builder(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            itemCount: filteredPayments.length,
+                            itemBuilder: (context, index) {
+                              final payment = filteredPayments[index];
               
               String clientName = "Unknown Client";
               try {
@@ -259,6 +285,9 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                 ),
               );
             },
+          ),
+          ), // End of Expanded
+          ],
           );
         },
       ),
