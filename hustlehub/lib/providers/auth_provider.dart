@@ -45,4 +45,26 @@ class AuthProvider with ChangeNotifier {
   Future<void> logout() async {
     await FirebaseAuth.instance.signOut();
   }
+
+  Future<void> updateUserName(String newName) async {
+    if (_currentUser == null) return;
+    
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_currentUser!.uid)
+          .update({'name': newName});
+          
+      _currentUser = UserModel(
+        uid: _currentUser!.uid,
+        name: newName,
+        email: _currentUser!.email,
+        createdAt: _currentUser!.createdAt,
+      );
+      notifyListeners();
+    } catch (e) {
+      debugPrint("Error updating user name: $e");
+      rethrow;
+    }
+  }
 }
