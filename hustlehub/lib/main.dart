@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:hustlehub/theme/app_theme.dart';
 import 'package:hustlehub/providers/auth_provider.dart';
 import 'package:hustlehub/providers/clients_provider.dart';
+import 'package:hustlehub/providers/projects_provider.dart';
 import 'package:hustlehub/screens/login_screen.dart';
 import 'package:hustlehub/screens/signup_screen.dart';
 import 'package:hustlehub/screens/home_screen.dart';
@@ -21,6 +22,7 @@ void main() async {
         providers: [
           ChangeNotifierProvider(create: (_) => AuthProvider()),
           ChangeNotifierProvider(create: (_) => ClientsProvider()),
+          ChangeNotifierProvider(create: (_) => ProjectsProvider()),
         ],
         child: const HustleHubApp(),
       ),
