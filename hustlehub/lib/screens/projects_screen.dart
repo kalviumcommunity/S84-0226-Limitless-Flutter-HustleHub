@@ -13,6 +13,8 @@ class ProjectsScreen extends StatefulWidget {
 }
 
 class _ProjectsScreenState extends State<ProjectsScreen> {
+  String _searchQuery = '';
+
   @override
   void initState() {
     super.initState();
@@ -206,19 +208,43 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
       ),
       body: Consumer2<ProjectsProvider, ClientsProvider>(
         builder: (context, projectsProvider, clientsProvider, child) {
-          if (projectsProvider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+          
+          final filteredProjects = projectsProvider.projects.where((p) {
+              return p.title.toLowerCase().contains(_searchQuery.toLowerCase());
+          }).toList();
 
-          if (projectsProvider.projects.isEmpty) {
-            return const Center(child: Text("No projects found. Add one above."));
-          }
-
-          return ListView.builder(
-            padding: const EdgeInsets.all(16.0),
-            itemCount: projectsProvider.projects.length,
-            itemBuilder: (context, index) {
-              final project = projectsProvider.projects[index];
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search projects by title...',
+                    prefixIcon: const Icon(Icons.search),
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value;
+                    });
+                  },
+                ),
+              ),
+              Expanded(
+                child: projectsProvider.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : filteredProjects.isEmpty
+                        ? const Center(child: Text("No projects found."))
+                        : ListView.builder(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            itemCount: filteredProjects.length,
+                            itemBuilder: (context, index) {
+                              final project = filteredProjects[index];
               
               // Find client name
               String clientName = "Unknown Client";
@@ -324,6 +350,9 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                 ),
               );
             },
+          ),
+          ), // End of Expanded
+            ],
           );
         },
       ),
