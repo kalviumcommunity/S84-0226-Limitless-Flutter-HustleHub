@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:hustlehub/providers/projects_provider.dart';
 import 'package:hustlehub/providers/clients_provider.dart';
+import 'package:hustlehub/screens/tasks_screen.dart';
 
 class ProjectsScreen extends StatefulWidget {
   const ProjectsScreen({super.key});
@@ -231,11 +232,20 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
 
               return Card(
                 margin: const EdgeInsets.only(bottom: 16.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TasksScreen(project: project),
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -310,6 +320,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                       )
                     ],
                   ),
+                ),
                 ),
               );
             },
