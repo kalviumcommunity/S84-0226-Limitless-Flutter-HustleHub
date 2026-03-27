@@ -122,8 +122,11 @@ class TasksProvider with ChangeNotifier {
     double progress = completedTasks / _tasks.length;
     
     String status = 'In Progress';
-    if (progress == 1.0) status = 'Completed';
-    else if (progress == 0.0) status = 'Pending';
+    if (progress == 1.0) {
+      status = 'Completed';
+    } else if (progress == 0.0) {
+      status = 'Pending';
+    }
     
     projectsProvider.updateProjectStatus(projectId, status, progress);
   }

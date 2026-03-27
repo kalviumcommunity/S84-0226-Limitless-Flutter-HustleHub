@@ -32,25 +32,83 @@ class _HomeScreenState extends State<HomeScreen> {
             _currentIndex = index;
           });
         },
-        destinations: const [
+        elevation: 8,
+        backgroundColor: Colors.white,
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.dashboard_outlined),
-            selectedIcon: Icon(Icons.dashboard),
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: _currentIndex == 0 ? Colors.deepPurple.withValues(alpha: 0.1) : Colors.transparent,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.dashboard_outlined),
+            ),
+            selectedIcon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.deepPurple.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.dashboard),
+            ),
             label: 'Dashboard',
           ),
           NavigationDestination(
-            icon: Icon(Icons.folder_outlined),
-            selectedIcon: Icon(Icons.folder),
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: _currentIndex == 1 ? Colors.deepPurple.withValues(alpha: 0.1) : Colors.transparent,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.folder_outlined),
+            ),
+            selectedIcon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.deepPurple.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.folder),
+            ),
             label: 'Projects',
           ),
           NavigationDestination(
-            icon: Icon(Icons.people_outlined),
-            selectedIcon: Icon(Icons.people),
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: _currentIndex == 2 ? Colors.deepPurple.withValues(alpha: 0.1) : Colors.transparent,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.people_outlined),
+            ),
+            selectedIcon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.deepPurple.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.people),
+            ),
             label: 'Clients',
           ),
           NavigationDestination(
-            icon: Icon(Icons.account_balance_wallet_outlined),
-            selectedIcon: Icon(Icons.account_balance_wallet),
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: _currentIndex == 3 ? Colors.deepPurple.withValues(alpha: 0.1) : Colors.transparent,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.account_balance_wallet_outlined),
+            ),
+            selectedIcon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.deepPurple.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.account_balance_wallet),
+            ),
             label: 'Payments',
           ),
         ],

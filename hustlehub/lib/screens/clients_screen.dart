@@ -32,26 +32,32 @@ class _ClientsScreenState extends State<ClientsScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(isEditing ? 'Edit Client' : 'Add New Client'),
+          title: Text(
+            isEditing ? 'Edit Client' : 'Add New Client',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextField(
+                _buildDialogTextField(
                   controller: nameController,
-                  decoration: const InputDecoration(labelText: 'Client Name', prefixIcon: Icon(Icons.person)),
+                  label: 'Client Name',
+                  icon: Icons.person,
                 ),
                 const SizedBox(height: 16),
-                TextField(
+                _buildDialogTextField(
                   controller: emailController,
+                  label: 'Email Address',
+                  icon: Icons.email,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(labelText: 'Email Address', prefixIcon: Icon(Icons.email)),
                 ),
                 const SizedBox(height: 16),
-                TextField(
+                _buildDialogTextField(
                   controller: phoneController,
+                  label: 'Phone Number',
+                  icon: Icons.phone,
                   keyboardType: TextInputType.phone,
-                  decoration: const InputDecoration(labelText: 'Phone Number', prefixIcon: Icon(Icons.phone)),
                 ),
               ],
             ),
@@ -61,10 +67,18 @@ class _ClientsScreenState extends State<ClientsScreen> {
               onPressed: () => Navigator.pop(context),
               child: const Text('Cancel'),
             ),
-            ElevatedButton(
+            ElevatedButton.icon(
               onPressed: () async {
-                if (nameController.text.trim().isEmpty) return;
-                
+                if (nameController.text.trim().isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('❌ Client name is required'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                  return;
+                }
+
                 try {
                   if (isEditing) {
                     await Provider.of<ClientsProvider>(context, listen: false).updateClient(
@@ -80,26 +94,54 @@ class _ClientsScreenState extends State<ClientsScreen> {
                       phoneController.text.trim(),
                     );
                   }
-                  
+
                   if (context.mounted) {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(isEditing ? 'Client updated successfully' : 'Client added successfully')),
+                      SnackBar(
+                        content: Text(isEditing ? '✅ Client updated successfully' : '✅ Client added successfully'),
+                        duration: const Duration(seconds: 2),
+                        backgroundColor: Colors.green,
+                      ),
                     );
                   }
                 } catch (e) {
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Error: $e')),
+                      SnackBar(
+                        content: Text('❌ Error: $e'),
+                        backgroundColor: Colors.red,
+                      ),
                     );
                   }
                 }
               },
-              child: Text(isEditing ? 'Update' : 'Save'),
+              icon: const Icon(Icons.check),
+              label: Text(isEditing ? 'Update Client' : 'Save Client'),
             ),
           ],
         );
       },
+    );
+  }
+
+  Widget _buildDialogTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return TextField(
+      controller: controller,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon),
+        contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+        filled: true,
+        fillColor: Colors.grey.withValues(alpha: 0.05),
+      ),
     );
   }
 
@@ -150,22 +192,25 @@ class _ClientsScreenState extends State<ClientsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Clients', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('👥 Clients', style: TextStyle(fontWeight: FontWeight.bold)),
+        elevation: 2,
       ),
       body: Column(
         children: [
+          // Search Bar
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16),
             child: TextField(
               decoration: InputDecoration(
-                hintText: 'Search clients by name or email...',
+                hintText: 'Search clients...',
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
-                fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+                fillColor: Colors.grey.withValues(alpha: 0.08),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
                 ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
               ),
               onChanged: (value) {
                 setState(() {
@@ -174,6 +219,8 @@ class _ClientsScreenState extends State<ClientsScreen> {
               },
             ),
           ),
+
+          // Clients List
           Expanded(
             child: clientsProvider.isLoading
                 ? const Center(child: CircularProgressIndicator())
@@ -184,49 +231,151 @@ class _ClientsScreenState extends State<ClientsScreen> {
                           await clientsProvider.fetchClients();
                         },
                         child: ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        itemCount: filteredClients.length,
-                        itemBuilder: (context, index) {
-                          final client = filteredClients[index];
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.deepPurple.shade100,
-                          child: Text(
-                            client.name.isNotEmpty ? client.name[0].toUpperCase() : 'C',
-                            style: const TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        title: Text(client.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                        subtitle: Text(
-                          client.email.isNotEmpty ? client.email : (client.phone.isNotEmpty ? client.phone : 'No contact info'),
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit, color: Colors.blue),
-                              onPressed: () => _showAddClientDialog(context, existingClient: client),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () => _confirmDelete(context, client.id, client.name),
-                            ),
-                          ],
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          itemCount: filteredClients.length,
+                          itemBuilder: (context, index) {
+                            final client = filteredClients[index];
+                            return _buildClientCard(
+                              client: client,
+                              onEdit: () => _showAddClientDialog(context, existingClient: client),
+                              onDelete: () => _confirmDelete(context, client.id, client.name),
+                            );
+                          },
                         ),
                       ),
-                    );
-                  },
-                ),
-                ),
-          ), // End of Expanded
+          ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showAddClientDialog(context),
-        tooltip: 'Add Client',
-        child: const Icon(Icons.person_add),
+        icon: const Icon(Icons.person_add),
+        label: const Text('New Client'),
+      ),
+    );
+  }
+
+  Widget _buildClientCard({
+    required ClientModel client,
+    required VoidCallback onEdit,
+    required VoidCallback onDelete,
+  }) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            // Avatar
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.deepPurple.shade300,
+                    Colors.deepPurple.shade600,
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  client.name.isNotEmpty ? client.name[0].toUpperCase() : 'C',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(width: 16),
+
+            // Client Info
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    client.name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 6),
+                  if (client.email.isNotEmpty)
+                    Row(
+                      children: [
+                        Icon(Icons.email, size: 14, color: Colors.grey[600]),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            client.email,
+                            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  if (client.phone.isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Icon(Icons.phone, size: 14, color: Colors.grey[600]),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            client.phone,
+                            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
+            ),
+
+            const SizedBox(width: 8),
+
+            // Action Buttons
+            PopupMenuButton(
+              itemBuilder: (BuildContext context) => [
+                PopupMenuItem(
+                  child: const Row(
+                    children: [
+                      Icon(Icons.edit, color: Colors.blue, size: 20),
+                      SizedBox(width: 12),
+                      Text('Edit'),
+                    ],
+                  ),
+                  onTap: onEdit,
+                ),
+                PopupMenuItem(
+                  child: const Row(
+                    children: [
+                      Icon(Icons.delete, color: Colors.red, size: 20),
+                      SizedBox(width: 12),
+                      Text('Delete'),
+                    ],
+                  ),
+                  onTap: onDelete,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -236,16 +385,28 @@ class _ClientsScreenState extends State<ClientsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.people_outline, size: 80, color: Colors.grey.shade400),
-          const SizedBox(height: 16),
-          Text(
-            'No clients yet',
-            style: TextStyle(fontSize: 20, color: Colors.grey.shade600, fontWeight: FontWeight.bold),
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.deepPurple.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.people_outline,
+              size: 80,
+              color: Colors.deepPurple.withValues(alpha: 0.7),
+            ),
+          ),
+          const SizedBox(height: 20),
+          const Text(
+            'No Clients Yet',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
-            'Click the + button to add your first client.',
-            style: TextStyle(color: Colors.grey.shade500),
+            'Tap the + button to add your first client',
+            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
